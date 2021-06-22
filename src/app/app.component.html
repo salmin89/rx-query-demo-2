@@ -1,0 +1,55 @@
+<div *ngIf="tags$ | async as query">
+  <ng-container
+    *ngTemplateOutlet="createNewTemplate; context: { $implicit: query }"
+  ></ng-container>
+
+  <ng-container [ngSwitch]="query.status">
+    <ul class="heroes" *ngSwitchDefault style="list-style: none">
+      <li *ngFor="let tag of query?.data; trackBy: trackById">
+        <input type="text" [(ngModel)]="tag.name" disabled />
+        <input type="text" [(ngModel)]="tag.color" disabled />
+        <input type="text" [value]="tag.id || 'loading...'" disabled />
+
+        <button (click)="currentTag$.next(tag)">Edit</button>
+        <button (click)="onDestroy(tag)">x</button>
+      </li>
+    </ul>
+
+    <div *ngSwitchCase="'loading'">Loading ...</div>
+    <div *ngSwitchCase="'error'">Error ({{ query.error }})</div>
+  </ng-container>
+</div>
+
+<ng-container *ngIf="tag$ | async as tag">
+  <ng-container [ngSwitch]="tag.status">
+    <div class="heroes" *ngSwitchDefault>
+      <h2>{{ tag.data['name'] | uppercase }} Details</h2>
+      <div><span>id: </span>{{ tag.data['id'] }}</div>
+      <div>
+        <label
+          >name:
+          <input #name [value]="tag.data['name']" placeholder="name" /> </label
+        ><label
+          >color:
+          <input #color [value]="tag.data['color']" placeholder="color" />
+        </label>
+      </div>
+      <button (click)="this.currentTag$.next(null)">Close</button>
+      <button
+        (click)="tag.mutate({ id: tag.data['id'], name: name.value, color: color.value })"
+      >
+        Save
+      </button>
+    </div>
+
+    <div *ngSwitchCase="'loading'">Loading ...</div>
+    <div *ngSwitchCase="'error'">Error ... ({{ tag.error }})</div>
+  </ng-container>
+</ng-container>
+
+<ng-template #createNewTemplate let-query>
+  Add new:
+  <input type="text" placeholder="name" [(ngModel)]="newTagData.name" />
+  <input type="text" placeholder="color" [(ngModel)]="newTagData.color" />
+  <button (click)="onCreate(newTagData)">Create</button>
+</ng-template>
