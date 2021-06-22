@@ -36,7 +36,7 @@ export class AppComponent  {
 
   tags$ = query(KEYS.TAG_LIST, () => this.service.getTags(), { ...defaultConfig }).pipe(shareReplay());
 
-  tag$ = query(KEYS.TAG, this.currentTagId$, (id) => this.service.getTag(id), {
+  tag$ = query(KEYS.TAG, this.currentTagId$, (id) => this.service.getTagById(id), {
     refetchOnWindowFocus: false,
     mutator: (tag) => {
       const updater = (tags: TagType[]) => {

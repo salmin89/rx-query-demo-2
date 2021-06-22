@@ -16,12 +16,12 @@ export type TagType = {
 export class TagService extends HttpClient {
   BASE_URL = 'https://6089b8b68c8043001757f52f.mockapi.io/tags';
 
-  getTags() {
-    return this.get<TagType[]>(this.BASE_URL).pipe(delay(1000));
+  getTagById(id: string | number) {
+    return this.get<TagType>(`${this.BASE_URL}/${id}`).pipe(delay(1000));
   }
 
-  getTag(id: string | number) {
-    return this.get<TagType>(`${this.BASE_URL}/${id}`).pipe(delay(1000));
+  getTags() {
+    return this.get<TagType[]>(this.BASE_URL).pipe(delay(1000));
   }
 
   updateTag(tag: TagType) {
